@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/animations/reveal";
+import { ProductCard } from "@/components/storefront/product-card";
 import { brand } from "@/lib/constants/brand";
+import { mockProducts } from "@/lib/data/mock-products";
 
 export default function Home() {
   return (
@@ -58,6 +60,29 @@ export default function Home() {
             </article>
           </Reveal>
         ))}
+      </section>
+
+      <section className="mx-auto w-full max-w-7xl px-5 pb-28 sm:px-8 md:pb-36">
+        <div className="mb-10 flex items-end justify-between gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Curated essentials</p>
+            <h2 className="mt-3 font-serif text-3xl text-brand-secondary sm:text-4xl">Featured in the drop</h2>
+          </div>
+          <Link
+            href="/collection"
+            className="hidden text-xs uppercase tracking-[0.16em] text-brand-secondary/70 transition-colors duration-500 hover:text-brand-accent sm:inline-flex"
+          >
+            View all
+          </Link>
+        </div>
+
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {mockProducts.slice(0, 3).map((product) => (
+            <Reveal key={product.id}>
+              <ProductCard product={product} />
+            </Reveal>
+          ))}
+        </div>
       </section>
     </div>
   );

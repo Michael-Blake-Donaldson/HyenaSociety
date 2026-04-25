@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
+import { useCart } from "@/components/cart/cart-provider";
 import { brand, navigation } from "@/lib/constants/brand";
 
 export function Navbar() {
+  const { openCart, itemCount } = useCart();
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-5 sm:px-8">
@@ -24,10 +29,16 @@ export function Navbar() {
 
         <button
           type="button"
+          onClick={openCart}
           aria-label="Open cart"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-accent/40 text-brand-secondary transition-colors duration-500 hover:border-brand-accent hover:text-brand-accent"
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-accent/40 text-brand-secondary transition-colors duration-500 hover:border-brand-accent hover:text-brand-accent"
         >
           <ShoppingBag className="h-4 w-4" />
+          {itemCount > 0 ? (
+            <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-accent px-1 text-[10px] font-semibold text-black">
+              {itemCount}
+            </span>
+          ) : null}
         </button>
       </div>
     </header>
