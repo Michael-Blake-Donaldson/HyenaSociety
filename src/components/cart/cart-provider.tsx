@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState, type PropsWithChildren } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 import type { CartItem, Product, ProductSize } from "@/types/store";
 
 type AddPayload = {
@@ -22,12 +22,33 @@ type CartContextValue = {
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
+const CART_STORAGE_KEY = "hyena.cart.items";
 
 export function CartProvider({ children }: PropsWithChildren) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") {
+      return [];
+    }
+
+    try {
+      const raw = window.localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw) {
+        return [];
+      }
+
+      const parsed = JSON.parse(raw) as CartItem[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
   const [isOpen, setIsOpen] = useState(false);
 
-  const addItem = ({ product, size, quantity = 1 }: AddPayload) => {
+  useEffect(() => {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
+
+  const addItem = useCallback(({ product, size, quantity = 1 }: AddPayload) => {
     setCart((prev) => {
       const existing = prev.find((entry) => entry.productId === product.id && entry.size === size);
 
@@ -53,13 +74,15 @@ export function CartProvider({ children }: PropsWithChildren) {
       ];
     });
     setIsOpen(true);
-  };
+  }, []);
 
-  const removeItem = (productId: string, size: ProductSize) => {
+  const removeItem = useCallback((productId: string, size: ProductSize) => {
     setCart((prev) => prev.filter((entry) => !(entry.productId === productId && entry.size === size)));
-  };
+  }, []);
 
-  const clearCart = () => setCart([]);
+  const clearCart = useCallback(() => setCart([]), []);
+  const openCart = useCallback(() => setIsOpen(true), []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
 
   const itemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const subtotal = useMemo(() => cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0), [cart]);
@@ -70,13 +93,13 @@ export function CartProvider({ children }: PropsWithChildren) {
       isOpen,
       itemCount,
       subtotal,
-      openCart: () => setIsOpen(true),
-      closeCart: () => setIsOpen(false),
+      openCart,
+      closeCart,
       addItem,
       removeItem,
       clearCart,
     }),
-    [cart, isOpen, itemCount, subtotal],
+    [addItem, cart, clearCart, closeCart, isOpen, itemCount, openCart, removeItem, subtotal],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

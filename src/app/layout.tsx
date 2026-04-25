@@ -21,6 +21,10 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: `${brand.name} | Luxury Performance Apparel`,
   description: brand.description,
+  icons: {
+    icon: "/HyenaSocietyLogo.png",
+    apple: "/HyenaSocietyLogo.png",
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   openGraph: {
     title: `${brand.name} | Luxury Performance Apparel`,

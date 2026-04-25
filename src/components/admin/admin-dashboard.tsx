@@ -124,7 +124,7 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-10">
-      <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/3 p-5">
         <p className="text-sm text-brand-secondary/75">Load protected admin data and refresh anytime after updates.</p>
         <button
           type="button"
@@ -144,17 +144,17 @@ export function AdminDashboard() {
             { label: "Revenue", value: formatCurrency(metrics.revenueCents / 100) },
             { label: "AOV", value: formatCurrency(metrics.averageOrderValueCents / 100) },
           ].map((metric) => (
-            <article key={metric.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+            <article key={metric.label} className="rounded-2xl border border-white/10 bg-white/3 p-5">
               <p className="text-xs uppercase tracking-[0.14em] text-brand-secondary/55">{metric.label}</p>
-              <p className="mt-3 font-serif text-2xl text-brand-secondary">{metric.value}</p>
+              <p className="mt-3 text-2xl font-extrabold uppercase tracking-tight text-brand-secondary">{metric.value}</p>
             </article>
           ))}
         </section>
       ) : null}
 
-      <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+      <section className="rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="font-serif text-3xl text-brand-secondary">Catalog</h2>
+          <h2 className="text-3xl font-extrabold uppercase tracking-tight text-brand-secondary">Catalog</h2>
           <button
             type="button"
             onClick={runPrintifySync}
@@ -190,8 +190,8 @@ export function AdminDashboard() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-        <h2 className="font-serif text-3xl text-brand-secondary">Recent Orders</h2>
+      <section className="rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
+        <h2 className="text-3xl font-extrabold uppercase tracking-tight text-brand-secondary">Recent Orders</h2>
         <div className="mt-6 space-y-3">
           {orders.length === 0 ? (
             <p className="text-sm text-brand-secondary/65">No orders yet.</p>

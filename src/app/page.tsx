@@ -20,7 +20,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── Full-bleed hero ── */}
-      <section className="relative flex min-h-[100svh] w-full flex-col">
+      <section className="relative flex min-h-svh w-full flex-col">
         {/* Background image */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
@@ -32,7 +32,7 @@ export default function Home() {
             sizes="100vw"
           />
           {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0d] via-[#0b0b0d]/50 to-[#0b0b0d]/20" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#0b0b0d] via-[#0b0b0d]/50 to-[#0b0b0d]/20" />
         </div>
 
         {/* Info bar — pinned above the bottom of the hero */}

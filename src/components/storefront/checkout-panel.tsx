@@ -39,7 +39,7 @@ export function CheckoutPanel() {
       city: String(formData.get("city") ?? ""),
       state: String(formData.get("state") ?? ""),
       postalCode: String(formData.get("postalCode") ?? ""),
-      country: String(formData.get("country") ?? "US"),
+      country: String(formData.get("country") ?? "US").toUpperCase(),
     };
 
     try {
@@ -74,7 +74,7 @@ export function CheckoutPanel() {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
-      <section className="space-y-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+      <section className="space-y-6 rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Secure Checkout</p>
           <h1 className="mt-4 font-serif text-4xl text-brand-secondary sm:text-5xl">Order Review</h1>
@@ -105,6 +105,7 @@ export function CheckoutPanel() {
             name="name"
             required
             placeholder="Full name"
+            autoComplete="name"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
@@ -112,40 +113,49 @@ export function CheckoutPanel() {
             type="email"
             required
             placeholder="Email"
+            autoComplete="email"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
             name="phone"
             placeholder="Phone (optional)"
+            autoComplete="tel"
+            inputMode="tel"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
             name="line1"
             required
             placeholder="Address line 1"
+            autoComplete="address-line1"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
             name="line2"
             placeholder="Address line 2"
+            autoComplete="address-line2"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
             name="city"
             required
             placeholder="City"
+            autoComplete="address-level2"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
             name="state"
             required
             placeholder="State"
+            autoComplete="address-level1"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
             name="postalCode"
             required
             placeholder="Postal code"
+            autoComplete="postal-code"
+            inputMode="numeric"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
           <input
@@ -155,6 +165,7 @@ export function CheckoutPanel() {
             minLength={2}
             maxLength={2}
             placeholder="Country code"
+            autoComplete="country"
             className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm uppercase text-brand-secondary outline-none transition-colors focus:border-brand-accent"
           />
 
@@ -166,11 +177,15 @@ export function CheckoutPanel() {
             {isSubmitting ? "Redirecting..." : "Continue to Payment"}
           </button>
 
-          {error ? <p className="sm:col-span-2 text-sm text-brand-accent">{error}</p> : null}
+          {error ? (
+            <p role="alert" aria-live="polite" className="sm:col-span-2 text-sm text-brand-accent">
+              {error}
+            </p>
+          ) : null}
         </form>
       </section>
 
-      <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+      <aside className="h-fit rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
         <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Summary</p>
         <div className="mt-6 flex items-center justify-between text-sm text-brand-secondary/80">
           <span>Subtotal</span>

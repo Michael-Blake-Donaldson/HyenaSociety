@@ -119,9 +119,9 @@ export function AccountPanel() {
   if (user) {
     return (
       <div className="grid gap-10 lg:grid-cols-[0.95fr_1fr]">
-        <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+        <section className="rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Profile</p>
-          <h2 className="mt-4 font-serif text-3xl text-brand-secondary">{displayName}</h2>
+            <h2 className="mt-4 text-3xl font-extrabold uppercase leading-tight tracking-tight text-brand-secondary">{displayName}</h2>
           <p className="mt-2 text-sm text-brand-secondary/70">{user.email}</p>
           <p className="mt-6 inline-flex rounded-full border border-brand-accent/60 px-4 py-2 text-xs uppercase tracking-[0.15em] text-brand-accent">
             {user.role}
@@ -136,7 +136,7 @@ export function AccountPanel() {
           </button>
         </section>
 
-        <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+        <section className="rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Saved Orders</p>
           <div className="mt-6 space-y-3">
             {orders.length === 0 ? (
@@ -164,7 +164,7 @@ export function AccountPanel() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-lg rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+    <section className="mx-auto w-full max-w-lg rounded-3xl border border-white/10 bg-white/3 p-6 sm:p-8">
       <div className="flex gap-2 rounded-full border border-white/10 bg-black/60 p-1">
         <button
           type="button"
@@ -192,11 +192,13 @@ export function AccountPanel() {
             <input
               name="firstName"
               placeholder="First name"
+              autoComplete="given-name"
               className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
             />
             <input
               name="lastName"
               placeholder="Last name"
+              autoComplete="family-name"
               className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
             />
           </div>
@@ -207,6 +209,7 @@ export function AccountPanel() {
           type="email"
           required
           placeholder="Email"
+          autoComplete="email"
           className="h-11 w-full rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
         />
         <input
@@ -215,6 +218,7 @@ export function AccountPanel() {
           required
           minLength={8}
           placeholder="Password"
+          autoComplete={mode === "login" ? "current-password" : "new-password"}
           className="h-11 w-full rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
         />
 
@@ -227,7 +231,11 @@ export function AccountPanel() {
         </button>
       </form>
 
-      {message ? <p className="mt-4 text-sm text-brand-secondary/70">{message}</p> : null}
+        {message ? (
+          <p role="status" aria-live="polite" className="mt-4 text-sm text-brand-accent">
+            {message}
+          </p>
+        ) : null}
     </section>
   );
 }

@@ -22,7 +22,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <section className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.25fr_1fr] lg:gap-14 md:py-28">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
+        <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-white/10">
           <Image
             src={product.images.primary}
             alt={product.name}
@@ -31,7 +31,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             className="object-cover"
           />
         </div>
-        <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
+        <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-white/10">
           <Image
             src={product.images.secondary}
             alt={`${product.name} alternate view`}
@@ -43,19 +43,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       <div className="lg:sticky lg:top-24 lg:h-fit">
-        <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">{product.category}</p>
-        <h1 className="mt-4 font-serif text-4xl text-brand-secondary sm:text-5xl">{product.name}</h1>
-        <p className="mt-4 text-sm text-brand-secondary/75">{formatCurrency(product.basePrice)}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-brand-accent">{product.category}</p>
+        <h1 className="mt-4 text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-brand-secondary sm:text-5xl">
+          {product.name}
+        </h1>
+        <p className="mt-4 text-sm font-semibold text-brand-secondary/75">{formatCurrency(product.basePrice)}</p>
 
         <p className="mt-8 max-w-xl text-sm leading-7 text-brand-secondary/70 sm:text-base">{product.description}</p>
 
         <div className="mt-10 space-y-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Size</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-brand-secondary/55">Size</p>
           <div className="flex flex-wrap gap-2">
             {product.sizes.map((size) => (
               <span
                 key={size}
-                className="inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-white/15 px-4 text-xs uppercase tracking-[0.16em] text-brand-secondary/80"
+                className="inline-flex h-10 min-w-10 items-center justify-center border border-white/15 px-4 text-xs font-semibold uppercase tracking-[0.16em] text-brand-secondary/80"
               >
                 {size}
               </span>
@@ -67,7 +69,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <AddToCartButton product={product} size={defaultSize} />
         </div>
 
-        <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm leading-7 text-brand-secondary/70">
+        <div className="mt-10 rounded-2xl border border-white/10 bg-white/3 p-5 text-sm leading-7 text-brand-secondary/70">
           <p className="font-medium text-brand-secondary">Fit Reference</p>
           <p className="mt-2">
             {product.model.name} is {product.model.height} and wears size {product.model.wearing}. {product.fitNotes}

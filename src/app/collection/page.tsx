@@ -39,8 +39,10 @@ export default async function CollectionPage({ searchParams }: CollectionPagePro
   return (
     <section className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 md:py-28">
       <div className="mb-12 space-y-5">
-        <p className="text-xs uppercase tracking-[0.2em] text-brand-secondary/55">Hyena Society Collection</p>
-        <h1 className="font-serif text-4xl text-brand-secondary sm:text-6xl">Luxury performance essentials</h1>
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-accent">Hyena Society Collection</p>
+        <h1 className="text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-brand-secondary sm:text-6xl">
+          Luxury performance essentials
+        </h1>
         <p className="max-w-2xl text-sm leading-7 text-brand-secondary/70 sm:text-base">
           Precision-engineered silhouettes with premium fabrication and restrained design language.
         </p>
@@ -54,7 +56,7 @@ export default async function CollectionPage({ searchParams }: CollectionPagePro
 
       <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.length === 0 ? (
-          <div className="col-span-full rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-sm text-brand-secondary/70">
+          <div className="col-span-full rounded-2xl border border-white/10 bg-white/3 p-8 text-sm text-brand-secondary/70">
             No products match your filters.
           </div>
         ) : (

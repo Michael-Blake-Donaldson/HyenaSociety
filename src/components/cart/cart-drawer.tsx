@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
@@ -9,6 +10,26 @@ import { useCart } from "@/components/cart/cart-provider";
 
 export function CartDrawer() {
   const { cart, isOpen, subtotal, closeCart, removeItem } = useCart();
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeCart();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [closeCart, isOpen]);
 
   return (
     <AnimatePresence>
@@ -30,6 +51,9 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Shopping cart"
             className="fixed right-0 top-0 z-50 flex h-svh w-full max-w-md flex-col border-l border-white/10 bg-black px-5 py-6 sm:px-6"
           >
             <div className="flex items-center justify-between">
@@ -45,12 +69,12 @@ export function CartDrawer() {
 
             <div className="mt-8 flex-1 space-y-4 overflow-y-auto pr-1">
               {cart.length === 0 ? (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm text-brand-secondary/65">
+                <div className="rounded-2xl border border-white/10 bg-white/3 p-6 text-sm text-brand-secondary/65">
                   Your cart is currently empty.
                 </div>
               ) : (
                 cart.map((item) => (
-                  <article key={`${item.productId}-${item.size}`} className="flex gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                  <article key={`${item.productId}-${item.size}`} className="flex gap-4 rounded-2xl border border-white/10 bg-white/3 p-3">
                     <div className="relative h-20 w-16 overflow-hidden rounded-lg">
                       <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
                     </div>

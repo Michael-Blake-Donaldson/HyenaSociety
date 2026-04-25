@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Grid2X2, Menu, X } from "lucide-react";
 import { useCart } from "@/components/cart/cart-provider";
@@ -17,10 +18,15 @@ export function Navbar() {
       <div className="mx-auto flex h-16 w-full max-w-none items-center justify-between px-5 sm:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-brand-accent bg-brand-accent">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-black" aria-hidden="true">
-              <path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8v8l-7 3.88L5 16V8l7-3.82z" />
-            </svg>
+          <span className="relative h-9 w-9 overflow-hidden rounded-sm border border-white/20 bg-black">
+            <Image
+              src="/HyenaSocietyLogo.png"
+              alt={`${brand.name} logo`}
+              fill
+              sizes="36px"
+              className="object-cover"
+              priority
+            />
           </span>
           <span className="text-[13px] font-bold uppercase tracking-[0.22em] text-white">
             {brand.name}

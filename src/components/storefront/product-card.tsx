@@ -11,7 +11,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/product/${product.slug}`} className="group">
       <article className="space-y-4">
-        <div className="relative aspect-[4/5] overflow-hidden bg-brand-surface">
+        <div className="relative aspect-4/5 overflow-hidden bg-brand-surface">
           <Image
             src={product.images.primary}
             alt={product.name}
@@ -20,7 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority={false}
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
           <Image
             src={product.images.secondary}
             alt={`${product.name} alternate view`}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { brand } from "@/lib/constants/brand";
 
@@ -8,10 +9,14 @@ export function Footer() {
         <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-accent">
-                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-black" aria-hidden="true">
-                  <path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8v8l-7 3.88L5 16V8l7-3.82z" />
-                </svg>
+              <span className="relative h-10 w-10 overflow-hidden rounded-sm border border-white/20 bg-black">
+                <Image
+                  src="/HyenaSocietyLogo.png"
+                  alt={`${brand.name} logo`}
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                />
               </span>
               <p className="text-[12px] font-bold uppercase tracking-[0.24em] text-white">{brand.name}</p>
             </div>
