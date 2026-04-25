@@ -14,4 +14,5 @@ export const navigation = [
   { href: "/collection", label: "Collection" },
   { href: "/story", label: "Story" },
   { href: "/account", label: "Account" },
+  { href: "/admin", label: "Admin" },
 ];

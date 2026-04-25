@@ -7,7 +7,7 @@
 3. Backend core (Prisma models, auth, API contracts) ✅
 4. Printify sync and fulfillment pipeline ✅
 5. Stripe checkout and order orchestration ✅
-6. Admin dashboard (catalog, orders, KPIs)
+6. Admin dashboard (catalog, orders, KPIs) ✅
 7. Polish (SEO, perf, micro-interactions, accessibility)
 
 ## Backlog Enhancements
@@ -27,3 +27,5 @@
 - Add admin preview of markup deltas before applying sync updates.
 - Add abandoned checkout recovery emails and premium concierge follow-up.
 - Add split-shipment messaging if Printify items are produced separately.
+- Add RBAC scopes for support agents versus super-admin users.
+- Add CSV export for daily order and revenue snapshots.
