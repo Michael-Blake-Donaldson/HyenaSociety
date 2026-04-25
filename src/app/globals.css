@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #f5f5f5;
-  --accent: #c6a15b;
+  --background: #10120f;
+  --foreground: #ece6d8;
+  --accent: #d8aa5e;
+  --surface: #171b16;
+  --line: #2b3228;
+  --muted: #7f8875;
 }
 
 @theme inline {
@@ -12,16 +15,23 @@
   --color-brand-primary: var(--background);
   --color-brand-secondary: var(--foreground);
   --color-brand-accent: var(--accent);
+  --color-brand-surface: var(--surface);
+  --color-brand-line: var(--line);
+  --color-brand-muted: var(--muted);
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
 }
 
 * {
-  border-color: rgb(255 255 255 / 0.08);
+  border-color: var(--line);
 }
 
 body {
   background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgb(216 170 94 / 0.08), transparent 28%),
+    radial-gradient(circle at 85% 22%, rgb(127 136 117 / 0.14), transparent 30%),
+    linear-gradient(180deg, #111510 0%, #0f120f 42%, #0c0f0d 100%);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
   text-rendering: optimizeLegibility;
@@ -36,7 +46,7 @@ input {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  box-shadow: 0 0 0 2px rgb(198 161 91 / 0.65);
+  box-shadow: 0 0 0 2px rgb(216 170 94 / 0.65);
 }
 
 h1,
@@ -49,7 +59,7 @@ h6 {
 }
 
 ::selection {
-  background-color: rgb(198 161 91 / 0.35);
+  background-color: rgb(216 170 94 / 0.35);
   color: var(--foreground);
 }
 

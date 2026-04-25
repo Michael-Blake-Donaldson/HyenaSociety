@@ -4,9 +4,9 @@ export const brand = {
   description:
     "Luxury performance apparel for athletes who demand presence, precision, and elevated comfort.",
   colors: {
-    primary: "#000000",
-    secondary: "#F5F5F5",
-    accent: "#C6A15B",
+    primary: "#10120F",
+    secondary: "#ECE6D8",
+    accent: "#D8AA5E",
   },
 };
 

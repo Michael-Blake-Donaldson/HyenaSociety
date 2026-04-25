@@ -11,7 +11,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/product/${product.slug}`} className="group">
       <article className="space-y-4">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-brand-line bg-brand-surface/40">
           <Image
             src={product.images.primary}
             alt={product.name}
@@ -20,6 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority={false}
           />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-primary/60 via-transparent to-transparent" />
           <Image
             src={product.images.secondary}
             alt={`${product.name} alternate view`}
@@ -28,14 +29,17 @@ export function ProductCard({ product }: ProductCardProps) {
             className="object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100"
             priority={false}
           />
+          <span className="absolute left-3 top-3 rounded-full border border-brand-line bg-brand-primary/70 px-3 py-1 text-[10px] uppercase tracking-[0.15em] text-brand-secondary/82">
+            New Drop
+          </span>
         </div>
 
         <div className="flex items-end justify-between gap-3">
           <div>
-            <p className="text-sm uppercase tracking-[0.14em] text-brand-secondary/55">{product.category}</p>
-            <h3 className="mt-2 font-serif text-xl text-brand-secondary">{product.name}</h3>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-brand-muted">{product.category}</p>
+            <h3 className="mt-2 text-lg font-medium uppercase tracking-[0.05em] text-brand-secondary">{product.name}</h3>
           </div>
-          <p className="text-sm text-brand-secondary/80">{formatCurrency(product.basePrice)}</p>
+          <p className="text-sm text-brand-secondary/84">{formatCurrency(product.basePrice)}</p>
         </div>
       </article>
     </Link>
