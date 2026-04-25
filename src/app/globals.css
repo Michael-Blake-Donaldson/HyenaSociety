@@ -27,6 +27,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+a,
+button,
+input {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  box-shadow: 0 0 0 2px rgb(198 161 91 / 0.65);
+}
+
 h1,
 h2,
 h3,
@@ -53,4 +65,13 @@ h6 {
   opacity: 0.12;
   background-image: radial-gradient(rgb(255 255 255 / 0.09) 0.45px, transparent 0.45px);
   background-size: 3px 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

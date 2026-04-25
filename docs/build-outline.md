@@ -8,7 +8,7 @@
 4. Printify sync and fulfillment pipeline ✅
 5. Stripe checkout and order orchestration ✅
 6. Admin dashboard (catalog, orders, KPIs) ✅
-7. Polish (SEO, perf, micro-interactions, accessibility)
+7. Polish (SEO, perf, micro-interactions, accessibility) ✅
 
 ## Backlog Enhancements
 
@@ -29,3 +29,5 @@
 - Add split-shipment messaging if Printify items are produced separately.
 - Add RBAC scopes for support agents versus super-admin users.
 - Add CSV export for daily order and revenue snapshots.
+- Add E2E checkout tests (Playwright) covering auth, Stripe redirect, and webhook flow.
+- Add release health dashboards (uptime, webhook failures, sync latency).

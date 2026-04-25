@@ -21,6 +21,18 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: `${brand.name} | Luxury Performance Apparel`,
   description: brand.description,
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  openGraph: {
+    title: `${brand.name} | Luxury Performance Apparel`,
+    description: brand.description,
+    type: "website",
+    siteName: brand.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${brand.name} | Luxury Performance Apparel`,
+    description: brand.description,
+  },
 };
 
 export default function RootLayout({

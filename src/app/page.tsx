@@ -6,8 +6,17 @@ import { brand } from "@/lib/constants/brand";
 import { mockProducts } from "@/lib/data/mock-products";
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    name: brand.name,
+    description: brand.description,
+    slogan: brand.tagline,
+  };
+
   return (
     <div className="relative">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(198,161,91,0.2),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(245,245,245,0.06),transparent_42%)]" />
 
       <section className="relative mx-auto flex min-h-[calc(100svh-4rem)] w-full max-w-7xl flex-col justify-end px-5 pb-14 pt-24 sm:px-8 md:pb-20 md:pt-32">
