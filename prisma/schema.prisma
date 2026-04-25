@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELED
+}
+
+enum ProductCategory {
+  tops
+  bottoms
+  sets
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  firstName    String?
+  lastName     String?
+  role         Role      @default(CUSTOMER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  orders       Order[]
+}
+
+model Product {
+  id               String          @id @default(cuid())
+  slug             String          @unique
+  name             String
+  description      String
+  category         ProductCategory
+  basePrice        Int
+  compareAtPrice   Int?
+  images           String[]
+  sizes            String[]
+  isActive         Boolean         @default(true)
+  printifyProductId String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  orderItems       OrderItem[]
+  variants         ProductVariant[]
+}
+
+model ProductVariant {
+  id               String   @id @default(cuid())
+  productId        String
+  sku              String?  @unique
+  size             String
+  color            String?
+  price            Int
+  printifyVariantId String?
+  isEnabled        Boolean  @default(true)
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Order {
+  id                 String      @id @default(cuid())
+  userId             String
+  status             OrderStatus @default(PENDING)
+  subtotal           Int
+  shipping           Int
+  tax                Int
+  total              Int
+  stripeCheckoutId   String?     @unique
+  stripePaymentId    String?
+  printifyOrderId    String?
+  shippingName       String
+  shippingEmail      String
+  shippingPhone      String?
+  shippingLine1      String
+  shippingLine2      String?
+  shippingCity       String
+  shippingState      String
+  shippingPostalCode String
+  shippingCountry    String
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  user               User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  items              OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  productId   String
+  variantId   String?
+  productName String
+  size        String
+  quantity    Int
+  unitPrice   Int
+  lineTotal   Int
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+}
