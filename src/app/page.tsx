@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowDownRight } from "lucide-react";
 import { Reveal } from "@/components/animations/reveal";
 import { ProductCard } from "@/components/storefront/product-card";
 import { brand } from "@/lib/constants/brand";
@@ -15,77 +16,121 @@ export default function Home() {
   };
 
   return (
-    <div className="relative grain-overlay">
+    <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(216,170,94,0.16),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(127,136,117,0.16),transparent_44%)]" />
 
-      <section className="relative mx-auto flex min-h-[calc(100svh-4rem)] w-full max-w-7xl flex-col justify-end px-5 pb-14 pt-24 sm:px-8 md:pb-20 md:pt-32">
-        <Reveal>
-          <p className="mb-5 text-xs uppercase tracking-[0.25em] text-brand-muted">Field tested collection</p>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <h1 className="max-w-4xl text-4xl font-semibold uppercase leading-tight tracking-[0.03em] text-brand-secondary sm:text-6xl md:text-7xl">
-            Quiet force.
-            <br />
-            Built for repeat performance.
-          </h1>
-        </Reveal>
-
-        <Reveal delay={0.2}>
-          <p className="mt-8 max-w-xl text-sm leading-7 text-brand-secondary/70 sm:text-base">
-            {brand.description}
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.3}>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/collection"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-brand-accent bg-brand-accent px-7 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1a1a] transition-all duration-500 hover:-translate-y-0.5 hover:bg-brand-accent/90"
-            >
-              Shop Collection
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/story"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-brand-line bg-brand-surface/40 px-7 text-xs font-medium uppercase tracking-[0.16em] text-brand-secondary transition-colors duration-500 hover:border-brand-accent hover:text-brand-accent"
-            >
-              Brand Story
-            </Link>
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-5 pb-20 sm:grid-cols-3 sm:px-8 md:pb-32">
-        {[
-          "Weather-adaptive technical fabrics",
-          "Utility-tailored silhouettes",
-          "Limited production per release",
-        ].map((detail, idx) => (
-          <Reveal key={detail} delay={0.15 * idx}>
-            <article className="rounded-2xl border border-brand-line bg-brand-surface/45 p-6">
-              <p className="text-sm leading-7 text-brand-secondary/75">{detail}</p>
-            </article>
-          </Reveal>
-        ))}
-      </section>
-
-      <section className="mx-auto w-full max-w-7xl px-5 pb-28 sm:px-8 md:pb-36">
-        <div className="mb-10 flex items-end justify-between gap-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-brand-muted">Curated essentials</p>
-            <h2 className="mt-3 text-3xl font-semibold uppercase tracking-[0.03em] text-brand-secondary sm:text-4xl">Featured in the drop</h2>
-          </div>
-          <Link
-            href="/collection"
-            className="hidden text-xs uppercase tracking-[0.16em] text-brand-muted transition-colors duration-500 hover:text-brand-accent sm:inline-flex"
-          >
-            View all
-          </Link>
+      {/* ── Full-bleed hero ── */}
+      <section className="relative flex min-h-[100svh] w-full flex-col">
+        {/* Background image */}
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&auto=format&fit=crop&q=80"
+            alt="Athlete in motion"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0d] via-[#0b0b0d]/50 to-[#0b0b0d]/20" />
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Info bar — pinned above the bottom of the hero */}
+        <div className="absolute bottom-28 left-0 right-0 z-10 sm:bottom-32">
+          <Reveal>
+            <div className="mx-5 rounded-sm border border-white/10 bg-[#0b0b0d]/70 backdrop-blur-sm sm:mx-8">
+              <div className="grid grid-cols-1 divide-y divide-white/10 px-6 py-4 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:py-0">
+                <div className="flex items-center gap-3 py-3 sm:py-4">
+                  <ArrowDownRight className="h-3.5 w-3.5 shrink-0 text-brand-accent" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70">Scroll to explore</span>
+                </div>
+                <div className="flex items-center gap-3 py-3 sm:px-6 sm:py-4">
+                  <span className="text-brand-accent">~</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70">Engineered for movement</span>
+                </div>
+                <div className="flex items-center gap-3 py-3 sm:px-6 sm:py-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70">Designed for the relentless</span>
+                  <span className="ml-auto text-brand-accent">⊕</span>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Hero text — bottom left */}
+        <div className="relative z-10 mt-auto px-5 pb-56 sm:px-8 sm:pb-64">
+          <Reveal>
+            <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-brand-accent">
+              New Collection
+            </p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1 className="max-w-2xl text-5xl font-extrabold uppercase leading-[0.95] tracking-tight text-white sm:text-7xl md:text-8xl">
+              Built for
+              <br />
+              the hunt.
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                href="/collection"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-sm bg-brand-accent px-6 text-[11px] font-bold uppercase tracking-[0.2em] text-black transition-opacity duration-300 hover:opacity-85"
+              >
+                Discover our products
+                <ArrowDownRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/story"
+                className="inline-flex h-11 items-center justify-center rounded-sm border border-white/20 px-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/80 transition-colors duration-300 hover:border-white/50 hover:text-white"
+              >
+                Our story
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Attributes strip ── */}
+      <section className="border-y border-brand-line">
+        <div className="grid grid-cols-1 divide-y divide-brand-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {[
+            { label: "01", text: "Performance fabrics built for extreme conditions" },
+            { label: "02", text: "Utility silhouettes. Zero compromise on movement" },
+            { label: "03", text: "Limited drops. Maximum impact." },
+          ].map(({ label, text }, idx) => (
+            <Reveal key={label} delay={0.1 * idx}>
+              <div className="px-8 py-8 md:px-12 md:py-10">
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-accent">{label}</p>
+                <p className="text-sm font-medium leading-relaxed text-white/65">{text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Featured products ── */}
+      <section className="px-5 py-24 sm:px-8 md:py-32">
+        <Reveal>
+          <div className="mb-12 flex items-end justify-between gap-6">
+            <div>
+              <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-accent">Latest drop</p>
+              <h2 className="text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-5xl">
+                Shop the
+                <br />
+                collection
+              </h2>
+            </div>
+            <Link
+              href="/collection"
+              className="hidden text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-muted transition-colors hover:text-white sm:inline-flex"
+            >
+              View all →
+            </Link>
+          </div>
+        </Reveal>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {mockProducts.slice(0, 3).map((product) => (
             <Reveal key={product.id}>
               <ProductCard product={product} />

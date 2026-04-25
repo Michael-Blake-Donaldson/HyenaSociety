@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #10120f;
-  --foreground: #ece6d8;
-  --accent: #d8aa5e;
-  --surface: #171b16;
-  --line: #2b3228;
-  --muted: #7f8875;
+  --background: #0b0b0d;
+  --foreground: #ffffff;
+  --accent: #c8f000;
+  --surface: #111115;
+  --line: #1e1e26;
+  --muted: #7a7a82;
 }
 
 @theme inline {
@@ -28,10 +28,6 @@
 
 body {
   background-color: var(--background);
-  background-image:
-    radial-gradient(circle at 15% 10%, rgb(216 170 94 / 0.08), transparent 28%),
-    radial-gradient(circle at 85% 22%, rgb(127 136 117 / 0.14), transparent 30%),
-    linear-gradient(180deg, #111510 0%, #0f120f 42%, #0c0f0d 100%);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
   text-rendering: optimizeLegibility;
@@ -46,7 +42,7 @@ input {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  box-shadow: 0 0 0 2px rgb(216 170 94 / 0.65);
+  box-shadow: 0 0 0 2px rgb(200 240 0 / 0.65);
 }
 
 h1,
@@ -55,26 +51,13 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 800;
 }
 
 ::selection {
-  background-color: rgb(216 170 94 / 0.35);
+  background-color: rgb(200 240 0 / 0.35);
   color: var(--foreground);
-}
-
-.grain-overlay {
-  position: relative;
-}
-
-.grain-overlay::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  opacity: 0.12;
-  background-image: radial-gradient(rgb(255 255 255 / 0.09) 0.45px, transparent 0.45px);
-  background-size: 3px 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
