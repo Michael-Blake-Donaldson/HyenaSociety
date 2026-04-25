@@ -6,7 +6,7 @@
 2. Storefront UI (home, collection, product detail, cart drawer) ✅
 3. Backend core (Prisma models, auth, API contracts) ✅
 4. Printify sync and fulfillment pipeline ✅
-5. Stripe checkout and order orchestration
+5. Stripe checkout and order orchestration ✅
 6. Admin dashboard (catalog, orders, KPIs)
 7. Polish (SEO, perf, micro-interactions, accessibility)
 
@@ -25,3 +25,5 @@
 - Add structured logging and request IDs for production debugging.
 - Add a scheduled Printify sync job for inventory consistency.
 - Add admin preview of markup deltas before applying sync updates.
+- Add abandoned checkout recovery emails and premium concierge follow-up.
+- Add split-shipment messaging if Printify items are produced separately.

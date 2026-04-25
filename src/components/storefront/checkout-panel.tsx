@@ -1,11 +1,76 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/format";
 import { useCart } from "@/components/cart/cart-provider";
 
+const AUTH_TOKEN_KEY = "hyena.auth.token";
+
 export function CheckoutPanel() {
   const { cart, subtotal } = useCart();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (cart.length === 0) {
+      return;
+    }
+
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!token) {
+      setError("Sign in from Account before checkout.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    const formData = new FormData(event.currentTarget);
+
+    const shipping = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      phone: String(formData.get("phone") ?? "") || undefined,
+      line1: String(formData.get("line1") ?? ""),
+      line2: String(formData.get("line2") ?? "") || undefined,
+      city: String(formData.get("city") ?? ""),
+      state: String(formData.get("state") ?? ""),
+      postalCode: String(formData.get("postalCode") ?? ""),
+      country: String(formData.get("country") ?? "US"),
+    };
+
+    try {
+      const response = await fetch("/api/checkout/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            productId: item.productId,
+            size: item.size,
+            quantity: item.quantity,
+          })),
+          shipping,
+        }),
+      });
+
+      const payload = (await response.json()) as { checkoutUrl?: string; error?: string };
+      if (!response.ok || !payload.checkoutUrl) {
+        throw new Error(payload.error ?? "Unable to initialize Stripe checkout.");
+      }
+
+      window.location.href = payload.checkoutUrl;
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : "Checkout request failed.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
@@ -33,6 +98,76 @@ export function CheckoutPanel() {
             ))}
           </div>
         )}
+
+        <form onSubmit={handleSubmit} className="grid gap-3 rounded-2xl border border-white/10 bg-black/40 p-5 sm:grid-cols-2">
+          <p className="sm:col-span-2 text-xs uppercase tracking-[0.18em] text-brand-secondary/55">Shipping details</p>
+          <input
+            name="name"
+            required
+            placeholder="Full name"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="email"
+            type="email"
+            required
+            placeholder="Email"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="phone"
+            placeholder="Phone (optional)"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="line1"
+            required
+            placeholder="Address line 1"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="line2"
+            placeholder="Address line 2"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="city"
+            required
+            placeholder="City"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="state"
+            required
+            placeholder="State"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="postalCode"
+            required
+            placeholder="Postal code"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+          <input
+            name="country"
+            defaultValue="US"
+            required
+            minLength={2}
+            maxLength={2}
+            placeholder="Country code"
+            className="h-11 rounded-xl border border-white/15 bg-black/50 px-4 text-sm uppercase text-brand-secondary outline-none transition-colors focus:border-brand-accent"
+          />
+
+          <button
+            type="submit"
+            className="sm:col-span-2 mt-2 inline-flex h-12 items-center justify-center rounded-full border border-brand-accent bg-brand-accent text-xs font-medium uppercase tracking-[0.16em] text-black transition-colors duration-500 hover:bg-brand-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={cart.length === 0 || isSubmitting}
+          >
+            {isSubmitting ? "Redirecting..." : "Continue to Payment"}
+          </button>
+
+          {error ? <p className="sm:col-span-2 text-sm text-brand-accent">{error}</p> : null}
+        </form>
       </section>
 
       <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
@@ -45,14 +180,6 @@ export function CheckoutPanel() {
           <span>Shipping</span>
           <span>Calculated at next step</span>
         </div>
-
-        <button
-          type="button"
-          className="mt-8 inline-flex h-12 w-full items-center justify-center rounded-full border border-brand-accent bg-brand-accent text-xs font-medium uppercase tracking-[0.16em] text-black transition-colors duration-500 hover:bg-brand-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={cart.length === 0}
-        >
-          Continue to Payment
-        </button>
 
         <Link
           href="/collection"
