@@ -5,7 +5,7 @@
 1. Foundation setup (Next.js, Tailwind, Framer Motion, design system) ✅
 2. Storefront UI (home, collection, product detail, cart drawer) ✅
 3. Backend core (Prisma models, auth, API contracts) ✅
-4. Printify sync and fulfillment pipeline
+4. Printify sync and fulfillment pipeline ✅
 5. Stripe checkout and order orchestration
 6. Admin dashboard (catalog, orders, KPIs)
 7. Polish (SEO, perf, micro-interactions, accessibility)
@@ -23,3 +23,5 @@
 - Add edge middleware for geo-aware shipping estimations.
 - Add server-side rate limiting for auth and checkout endpoints.
 - Add structured logging and request IDs for production debugging.
+- Add a scheduled Printify sync job for inventory consistency.
+- Add admin preview of markup deltas before applying sync updates.
