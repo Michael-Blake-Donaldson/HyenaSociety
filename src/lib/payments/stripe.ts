@@ -1,4 +1,8 @@
 import Stripe from "stripe";
+import { env } from "@/lib/env";
+
+// Validate env vars at import time
+void env;
 
 declare global {
   var stripeClient: Stripe | undefined;

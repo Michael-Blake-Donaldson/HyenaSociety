@@ -17,6 +17,7 @@ enum OrderStatus {
   PAID
   FULFILLED
   CANCELED
+  REFUNDED
 }
 
 enum ProductCategory {
@@ -26,15 +27,17 @@ enum ProductCategory {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  email        String    @unique
-  passwordHash String
-  firstName    String?
-  lastName     String?
-  role         Role      @default(CUSTOMER)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  orders       Order[]
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  passwordHash          String
+  firstName             String?
+  lastName              String?
+  role                  Role      @default(CUSTOMER)
+  passwordResetToken    String?
+  passwordResetExpiry   DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  orders                Order[]
 }
 
 model Product {
@@ -114,3 +117,10 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
 }
+
+model StripeEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  processedAt   DateTime @default(now())
+}
+

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { formatCurrency } from "@/lib/format";
+import { useEffect, useMemo, useState } from "react";import Link from "next/link";import { formatCurrency } from "@/lib/format";
 
 type SessionUser = {
   id: string;
@@ -107,6 +106,36 @@ export function AccountPanel() {
     setMessage("Signed out.");
   };
 
+  const deleteAccount = async () => {
+    if (
+      !confirm(
+        "Are you sure you want to delete your account? This action cannot be undone and all your orders will be permanently deleted."
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/account", { method: "DELETE", credentials: "include" });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setMessage(data.error || "Failed to delete account");
+        return;
+      }
+
+      setUser(null);
+      setOrders([]);
+      setMessage("Account deleted. Redirecting to home...");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } catch (error) {
+      console.error("Error:", error);
+      setMessage("An error occurred while deleting your account");
+    }
+  };
+
   if (!sessionReady) {
     return (
       <section className="mx-auto w-full max-w-lg rounded-3xl border border-white/10 bg-white/3 p-6 text-sm text-brand-secondary/70 sm:p-8">
@@ -132,6 +161,14 @@ export function AccountPanel() {
             className="mt-8 inline-flex h-11 items-center justify-center rounded-full border border-white/20 px-6 text-xs uppercase tracking-[0.16em] text-brand-secondary/80 transition-colors duration-500 hover:border-brand-accent hover:text-brand-accent"
           >
             Sign out
+          </button>
+
+          <button
+            type="button"
+            onClick={deleteAccount}
+            className="mt-3 inline-flex h-11 items-center justify-center rounded-full border border-red-900/60 px-6 text-xs uppercase tracking-[0.16em] text-red-400 transition-colors duration-500 hover:border-red-600 hover:text-red-300"
+          >
+            Delete Account
           </button>
         </section>
 
@@ -220,6 +257,17 @@ export function AccountPanel() {
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           className="h-11 w-full rounded-xl border border-white/15 bg-black/50 px-4 text-sm text-brand-secondary outline-none transition-colors focus:border-brand-accent"
         />
+
+        {mode === "login" && (
+          <div className="flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-brand-secondary/70 hover:text-brand-accent transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        )}
 
         <button
           type="submit"

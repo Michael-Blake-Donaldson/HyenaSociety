@@ -1,4 +1,8 @@
 import type { PrintifyOrderPayload, PrintifyProduct } from "@/lib/printify/types";
+import { env } from "@/lib/env";
+
+// Validate env vars at import time
+void env;
 
 const PRINTIFY_BASE = "https://api.printify.com/v1";
 

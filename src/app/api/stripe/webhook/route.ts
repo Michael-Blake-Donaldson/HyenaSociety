@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { prisma } from "@/lib/db/prisma";
+import prisma from "@/lib/db/prisma";
 import { getStripeClient } from "@/lib/payments/stripe";
 import { sendOrderToPrintify } from "@/lib/printify/fulfillment";
 
@@ -23,30 +23,54 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+  // Check if event has already been processed (idempotency)
+  const existingEvent = await prisma.stripeEvent.findUnique({
+    where: { stripeEventId: event.id },
+  });
 
-    const order = await prisma.order.findFirst({
-      where: {
-        OR: [{ stripeCheckoutId: session.id }, { id: session.metadata?.orderId }],
-      },
-    });
+  if (existingEvent) {
+    // Event already processed, return success without reprocessing
+    return NextResponse.json({ received: true, reprocessed: true });
+  }
 
-    if (order && order.status !== "PAID") {
-      await prisma.order.update({
-        where: { id: order.id },
-        data: {
-          status: "PAID",
-          stripePaymentId: typeof session.payment_intent === "string" ? session.payment_intent : null,
+  try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      const order = await prisma.order.findFirst({
+        where: {
+          OR: [{ stripeCheckoutId: session.id }, { id: session.metadata?.orderId }],
         },
       });
 
-      try {
-        await sendOrderToPrintify(order.id);
-      } catch {
-        // Webhook should still acknowledge payment even if fulfillment fails.
+      if (order && order.status !== "PAID") {
+        await prisma.order.update({
+          where: { id: order.id },
+          data: {
+            status: "PAID",
+            stripePaymentId: typeof session.payment_intent === "string" ? session.payment_intent : null,
+          },
+        });
+
+        try {
+          await sendOrderToPrintify(order.id);
+        } catch (printifyError) {
+          // Webhook should still acknowledge payment even if fulfillment fails.
+          console.error("[PRINTIFY WEBHOOK ERROR]", printifyError);
+        }
       }
     }
+
+    // Record event as processed
+    await prisma.stripeEvent.create({
+      data: {
+        stripeEventId: event.id,
+      },
+    });
+  } catch (error) {
+    console.error("[STRIPE WEBHOOK PROCESSING ERROR]", error);
+    // Return 500 so Stripe retries
+    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });
