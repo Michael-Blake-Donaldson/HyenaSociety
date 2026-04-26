@@ -180,7 +180,7 @@ export function AccountPanel() {
                 No orders yet.
               </div>
             ) : (
-              orders.map((order) => (
+              orders.slice(0, 3).map((order) => (
                 <article key={order.id} className="rounded-2xl border border-white/10 p-4">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm text-brand-secondary">{order.id.slice(0, 12)}</p>
@@ -194,6 +194,14 @@ export function AccountPanel() {
               ))
             )}
           </div>
+          {orders.length > 0 && (
+            <Link
+              href="/orders"
+              className="mt-4 inline-flex h-10 items-center justify-center rounded-full border border-brand-accent/60 px-6 text-xs uppercase tracking-[0.16em] text-brand-accent transition-colors duration-500 hover:bg-brand-accent hover:text-black"
+            >
+              View All Orders
+            </Link>
+          )}
         </section>
       </div>
     );
