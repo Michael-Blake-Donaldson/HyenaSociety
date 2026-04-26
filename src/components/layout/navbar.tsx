@@ -93,6 +93,24 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Mobile account section */}
+            <div className="border-t border-brand-line pt-5">
+              <Link
+                href="/account"
+                onClick={() => setMobileOpen(false)}
+                className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-muted transition-colors hover:text-white py-2"
+              >
+                Account
+              </Link>
+              <Link
+                href="/orders"
+                onClick={() => setMobileOpen(false)}
+                className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-brand-muted transition-colors hover:text-white py-2"
+              >
+                Orders
+              </Link>
+            </div>
           </nav>
         </div>
       ) : null}
