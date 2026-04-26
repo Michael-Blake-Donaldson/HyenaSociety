@@ -40,6 +40,20 @@ export function Footer() {
                 </Link>
               ))}
             </div>
+            <div className="space-y-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-brand-accent">Legal</p>
+              {[
+                { label: "Privacy", href: "/privacy" },
+                { label: "Terms", href: "/terms" },
+                { label: "Refunds", href: "/refunds" },
+                { label: "Shipping", href: "/shipping" },
+                { label: "Contact", href: "/contact" },
+              ].map((l) => (
+                <Link key={l.href + l.label} href={l.href} className="block text-[11px] uppercase tracking-[0.18em] text-brand-muted transition-colors hover:text-white">
+                  {l.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
