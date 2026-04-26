@@ -5,6 +5,7 @@ import { hashPassword } from "@/lib/auth/password";
 import { AUTH_COOKIE_NAME, AUTH_COOKIE_OPTIONS } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { applyRateLimit } from "@/lib/security/rate-limit";
+import { sendWelcomeEmail } from "@/lib/email/service";
 
 const signupSchema = z.object({
   email: z.string().email(),
@@ -66,6 +67,14 @@ export async function POST(request: Request) {
     response.cookies.set(AUTH_COOKIE_NAME, token, AUTH_COOKIE_OPTIONS);
     response.headers.set("X-RateLimit-Limit", String(rateLimit.limit));
     response.headers.set("X-RateLimit-Remaining", String(rateLimit.remaining));
+
+    // Send welcome email asynchronously (don't block signup)
+    sendWelcomeEmail({
+      recipientEmail: user.email,
+      customerName: user.firstName || user.email.split('@')[0],
+    }).catch(error => {
+      console.error('[SIGNUP] Failed to send welcome email:', error);
+    });
 
     return response;
   } catch (error) {

@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import prisma from "@/lib/db/prisma";
 import { getStripeClient } from "@/lib/payments/stripe";
 import { sendOrderToPrintify } from "@/lib/printify/fulfillment";
+import { sendOrderConfirmationEmail } from "@/lib/email/service";
 
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");
@@ -58,6 +59,41 @@ export async function POST(request: Request) {
           // Webhook should still acknowledge payment even if fulfillment fails.
           console.error("[PRINTIFY WEBHOOK ERROR]", printifyError);
         }
+
+        // Send order confirmation email asynchronously
+        void (async () => {
+          try {
+            const user = await prisma.user.findUnique({
+              where: { id: order.userId },
+            });
+
+            const orderItems = await prisma.orderItem.findMany({
+              where: { orderId: order.id },
+            });
+
+            if (user) {
+              await sendOrderConfirmationEmail({
+                recipientEmail: user.email,
+                customerName: user.firstName || user.email.split('@')[0],
+                orderNumber: order.id.slice(0, 8).toUpperCase(),
+                items: orderItems.map(item => ({
+                  name: item.productName,
+                  quantity: item.quantity,
+                  price: item.unitPrice,
+                })),
+                subtotal: order.subtotal,
+                shipping: order.shipping,
+                tax: order.tax,
+                total: order.total,
+                shippingAddress: `${order.shippingName}\n${order.shippingLine1}${
+                  order.shippingLine2 ? '\n' + order.shippingLine2 : ''
+                }\n${order.shippingCity}, ${order.shippingState} ${order.shippingPostalCode}\n${order.shippingCountry}`,
+              });
+            }
+          } catch (emailError) {
+            console.error('[WEBHOOK EMAIL ERROR]', emailError);
+          }
+        })();
       }
     }
 
