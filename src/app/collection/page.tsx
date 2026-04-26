@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { CollectionFilters } from "@/components/storefront/collection-filters";
 import { ProductCard } from "@/components/storefront/product-card";
 import { getCollectionProducts } from "@/lib/data/mock-products";
@@ -9,6 +10,18 @@ type CollectionPageProps = {
     size?: ProductSize;
     price?: string;
   }>;
+};
+
+export const metadata: Metadata = {
+  title: "Shop Our Collection | Hyena Society | Luxury Performance Apparel",
+  description: "Explore our premium collection of luxury performance apparel designed for the elite. High-quality, sustainable materials for athletes and enthusiasts.",
+  openGraph: {
+    title: "Shop Our Collection | Hyena Society",
+    description: "Explore our premium collection of luxury performance apparel designed for the elite.",
+    type: "website",
+    url: "/collection",
+  },
+  keywords: ["luxury apparel", "performance wear", "athlete clothing", "premium fitness wear"],
 };
 
 function getPriceRange(price?: string): { minPrice?: number; maxPrice?: number } {

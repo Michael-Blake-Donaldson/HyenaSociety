@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
@@ -8,6 +9,35 @@ import type { ProductSize } from "@/types/store";
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+    };
+  }
+
+  return {
+    title: `${product.name} | Hyena Society | Luxury Performance Apparel`,
+    description: product.description.substring(0, 160),
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      type: "website",
+      url: `/product/${slug}`,
+      images: [
+        {
+          url: product.images.primary,
+          alt: product.name,
+        },
+      ],
+    },
+    keywords: [product.name, product.category, "luxury apparel", "performance wear"],
+  };
+}
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
