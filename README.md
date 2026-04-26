@@ -1,33 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hyena Society - Luxury Performance Apparel
 
-## Getting Started
+Premium e-commerce platform for luxury fitness wear with full stack Next.js implementation.
 
-First, run the development server:
+## 🎯 Features
+
+### Core E-Commerce
+- ✅ Product catalog with filtering & search
+- ✅ Guest & authenticated checkout (Stripe)
+- ✅ Order management & history
+- ✅ Inventory sync with Printify (print-on-demand)
+- ✅ Admin dashboard (order tracking, analytics)
+
+### Authentication & Security
+- ✅ Secure password reset with JWT tokens
+- ✅ HTTP-only cookie sessions
+- ✅ Rate limiting (anti-brute force)
+- ✅ GDPR account deletion
+- ✅ Environment variable validation
+
+### Email & Notifications
+- ✅ Transactional emails (Resend)
+- ✅ Order confirmations
+- ✅ Password reset emails
+- ✅ Shipping notifications
+- ✅ Toast notifications (in-app)
+
+### Compliance & Legal
+- ✅ Privacy policy & Terms of service
+- ✅ Return & refund policy
+- ✅ Shipping policy
+- ✅ Contact form
+
+### SEO & Discovery
+- ✅ Dynamic meta tags per product
+- ✅ Sitemap with priority/frequency
+- ✅ Robots.txt for crawlers
+
+### Testing & Quality
+- ✅ Jest unit tests (10 passing)
+- ✅ TypeScript strict mode
+- ✅ GitHub Actions CI/CD
+
+## 🚀 Quick Start
 
 ```bash
+npm install
+cp .env.example .env.local
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for production setup.
 
 ## Deploy on Vercel
 
