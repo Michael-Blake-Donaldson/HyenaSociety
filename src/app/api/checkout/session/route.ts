@@ -30,9 +30,7 @@ const payloadSchema = z.object({
 
 export async function POST(request: Request) {
   const userId = await getSessionUserId();
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // Guest checkout is allowed, userId is optional
 
   try {
     const json = await request.json();
@@ -104,7 +102,7 @@ export async function POST(request: Request) {
 
     const order = await prisma.order.create({
       data: {
-        userId,
+        userId: userId || undefined,  // Optional for guest checkout
         subtotal,
         shipping,
         tax,

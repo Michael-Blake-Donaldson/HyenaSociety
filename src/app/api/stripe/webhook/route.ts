@@ -63,6 +63,13 @@ export async function POST(request: Request) {
         // Send order confirmation email asynchronously
         void (async () => {
           try {
+            // Only send email if there's an authenticated user
+            // For guests, they'll receive order info in the Stripe receipt
+            if (!order.userId) {
+              console.log('[WEBHOOK] Skipping email for guest checkout (no userId)');
+              return;
+            }
+
             const user = await prisma.user.findUnique({
               where: { id: order.userId },
             });
