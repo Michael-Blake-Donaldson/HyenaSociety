@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { signAuthToken } from "@/lib/auth/jwt";
 import { hashPassword } from "@/lib/auth/password";
+import { AUTH_COOKIE_NAME, AUTH_COOKIE_OPTIONS } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
+import { applyRateLimit } from "@/lib/security/rate-limit";
 
 const signupSchema = z.object({
   email: z.string().email(),
@@ -12,6 +14,21 @@ const signupSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  const rateLimit = applyRateLimit(request, "auth-signup", { limit: 5, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many signup attempts. Please try again shortly." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfter),
+          "X-RateLimit-Limit": String(rateLimit.limit),
+          "X-RateLimit-Remaining": String(rateLimit.remaining),
+        },
+      },
+    );
+  }
+
   try {
     const json = await request.json();
     const data = signupSchema.parse(json);
@@ -44,7 +61,13 @@ export async function POST(request: Request) {
       role: user.role,
     });
 
-    return NextResponse.json({ token, user }, { status: 201 });
+    const response = NextResponse.json({ user }, { status: 201 });
+
+    response.cookies.set(AUTH_COOKIE_NAME, token, AUTH_COOKIE_OPTIONS);
+    response.headers.set("X-RateLimit-Limit", String(rateLimit.limit));
+    response.headers.set("X-RateLimit-Remaining", String(rateLimit.remaining));
+
+    return response;
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid signup payload", details: error.flatten() }, { status: 400 });

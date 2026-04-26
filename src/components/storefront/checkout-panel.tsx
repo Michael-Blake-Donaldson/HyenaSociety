@@ -5,8 +5,6 @@ import Link from "next/link";
 import { formatCurrency } from "@/lib/format";
 import { useCart } from "@/components/cart/cart-provider";
 
-const AUTH_TOKEN_KEY = "hyena.auth.token";
-
 export function CheckoutPanel() {
   const { cart, subtotal } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,12 +14,6 @@ export function CheckoutPanel() {
     event.preventDefault();
 
     if (cart.length === 0) {
-      return;
-    }
-
-    const token = localStorage.getItem(AUTH_TOKEN_KEY);
-    if (!token) {
-      setError("Sign in from Account before checkout.");
       return;
     }
 
@@ -45,10 +37,7 @@ export function CheckoutPanel() {
     try {
       const response = await fetch("/api/checkout/session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: cart.map((item) => ({
             productId: item.productId,

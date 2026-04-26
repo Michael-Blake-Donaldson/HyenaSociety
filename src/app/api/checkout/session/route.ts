@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { z } from "zod";
-import { verifyAuthToken } from "@/lib/auth/jwt";
+import { getSessionUserId } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { getStripeClient } from "@/lib/payments/stripe";
 import { mockProducts } from "@/lib/data/mock-products";
@@ -29,37 +28,8 @@ const payloadSchema = z.object({
   }),
 });
 
-function parseBearerToken(authHeader?: string | null) {
-  if (!authHeader) {
-    return null;
-  }
-
-  const [scheme, token] = authHeader.split(" ");
-  if (scheme?.toLowerCase() !== "bearer" || !token) {
-    return null;
-  }
-
-  return token;
-}
-
-async function getAuthUserId() {
-  const requestHeaders = await headers();
-  const token = parseBearerToken(requestHeaders.get("authorization"));
-
-  if (!token) {
-    return null;
-  }
-
-  try {
-    const payload = verifyAuthToken(token);
-    return payload.userId;
-  } catch {
-    return null;
-  }
-}
-
 export async function POST(request: Request) {
-  const userId = await getAuthUserId();
+  const userId = await getSessionUserId();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

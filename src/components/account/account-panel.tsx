@@ -20,8 +20,6 @@ type Order = {
 
 type AuthMode = "login" | "signup";
 
-const AUTH_TOKEN_KEY = "hyena.auth.token";
-
 async function parseJsonResponse<T>(response: Response): Promise<T> {
   const payload = (await response.json()) as T & { error?: string };
 
@@ -36,40 +34,28 @@ export function AccountPanel() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(() => {
-    if (typeof window === "undefined") {
-      return null;
-    }
-
-    return localStorage.getItem(AUTH_TOKEN_KEY);
-  });
+  const [sessionReady, setSessionReady] = useState(false);
   const [user, setUser] = useState<SessionUser | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    if (!token) {
-      return;
-    }
-
     void (async () => {
       try {
-        const meRes = await fetch("/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const meRes = await fetch("/api/auth/me");
         const meData = await parseJsonResponse<{ user: SessionUser }>(meRes);
         setUser(meData.user);
 
-        const ordersRes = await fetch("/api/orders", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const ordersRes = await fetch("/api/orders");
         const ordersData = await parseJsonResponse<{ orders: Order[] }>(ordersRes);
         setOrders(ordersData.orders);
       } catch {
-        setToken(null);
-        localStorage.removeItem(AUTH_TOKEN_KEY);
+        setUser(null);
+        setOrders([]);
+      } finally {
+        setSessionReady(true);
       }
     })();
-  }, [token]);
+  }, []);
 
   const displayName = useMemo(() => {
     if (!user) return "";
@@ -98,10 +84,14 @@ export function AccountPanel() {
         body: JSON.stringify(body),
       });
 
-      const payload = await parseJsonResponse<{ token: string }>(response);
-      localStorage.setItem(AUTH_TOKEN_KEY, payload.token);
-      setToken(payload.token);
+      const payload = await parseJsonResponse<{ user: SessionUser }>(response);
+      setUser(payload.user);
       setMessage(mode === "login" ? "Welcome back." : "Account created.");
+
+      const ordersRes = await fetch("/api/orders");
+      const ordersData = await parseJsonResponse<{ orders: Order[] }>(ordersRes);
+      setOrders(ordersData.orders);
+
       event.currentTarget.reset();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to authenticate.");
@@ -110,11 +100,20 @@ export function AccountPanel() {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    setToken(null);
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setUser(null);
+    setOrders([]);
     setMessage("Signed out.");
   };
+
+  if (!sessionReady) {
+    return (
+      <section className="mx-auto w-full max-w-lg rounded-3xl border border-white/10 bg-white/3 p-6 text-sm text-brand-secondary/70 sm:p-8">
+        Loading account...
+      </section>
+    );
+  }
 
   if (user) {
     return (

@@ -31,8 +31,6 @@ type Metrics = {
   averageOrderValueCents: number;
 };
 
-const AUTH_TOKEN_KEY = "hyena.auth.token";
-
 export function AdminDashboard() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [orders, setOrders] = useState<AdminOrder[]>([]);
@@ -40,25 +38,15 @@ export function AdminDashboard() {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem(AUTH_TOKEN_KEY) : null;
-
   async function fetchData() {
-    if (!token) {
-      setLoading(false);
-      setMessage("Admin token required. Sign in with an admin account first.");
-      return;
-    }
-
     setLoading(true);
     setMessage(null);
 
     try {
-      const headers = { Authorization: `Bearer ${token}` };
-
       const [productsRes, ordersRes, analyticsRes] = await Promise.all([
-        fetch("/api/admin/products", { headers }),
-        fetch("/api/admin/orders", { headers }),
-        fetch("/api/admin/analytics", { headers }),
+        fetch("/api/admin/products"),
+        fetch("/api/admin/orders"),
+        fetch("/api/admin/analytics"),
       ]);
 
       if (!productsRes.ok || !ordersRes.ok || !analyticsRes.ok) {
@@ -80,16 +68,10 @@ export function AdminDashboard() {
   }
 
   const runPrintifySync = async () => {
-    if (!token) {
-      setMessage("Admin token required.");
-      return;
-    }
-
     setMessage("Syncing Printify catalog...");
 
     const response = await fetch("/api/admin/printify/sync", {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!response.ok) {
@@ -103,15 +85,10 @@ export function AdminDashboard() {
   };
 
   const toggleProduct = async (product: AdminProduct) => {
-    if (!token) {
-      return;
-    }
-
     await fetch("/api/admin/products", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         productId: product.id,
